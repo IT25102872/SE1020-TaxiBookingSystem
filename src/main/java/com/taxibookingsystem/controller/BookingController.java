@@ -12,7 +12,7 @@ public class BookingController {
     private final BookingService bookingService
             = new BookingService();
 
-    // /bookings/list → The booking-list.html page is displayed.**
+    // /bookings/list → The booking-list.html page is displayed.
     @GetMapping("/list")
     public String listBookings(Model model) {
         model.addAttribute("bookings",
