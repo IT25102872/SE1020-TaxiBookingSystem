@@ -148,7 +148,7 @@
 </div>
 
 <script>
-    // Focus ලෙස label color change
+    // Changing the color of the label as focus
     document.querySelectorAll('.form-control').forEach(input => {
       input.addEventListener('focus', function() {
         this.closest('.mb-3').querySelector('.form-label').style.color = '#F5C518';
@@ -158,7 +158,7 @@
       });
     });
 
-    // Submit ලෙස loading text
+    // loading text as submit
     document.querySelector('form').addEventListener('submit', function() {
       const btn = this.querySelector('.btn-warning');
       btn.innerHTML = '⏳ Booking...';
