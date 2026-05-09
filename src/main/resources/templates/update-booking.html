@@ -210,7 +210,7 @@
     select.addEventListener('change', updateSelectColor);
     updateSelectColor(); // page load ලෙස apply
 
-    // loading text as submit
+    // Submit ලෙස loading text
     document.querySelector('form').addEventListener('submit', function() {
       const btn = this.querySelector('.btn-primary');
       btn.innerHTML = '⏳ Updating...';
