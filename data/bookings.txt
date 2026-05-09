@@ -1,0 +1,3 @@
+B1778261689614,M3pala,Malabe,Kaduwela,PENDING,0.0
+B1778261759500,Pathum,Malabe,Kollupitiya,PENDING,0.0
+B1778261785027,Nissanka,Gampaha,Kadawatha,PENDING,0.0
