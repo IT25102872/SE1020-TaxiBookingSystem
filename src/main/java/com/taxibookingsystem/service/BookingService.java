@@ -1,44 +1,46 @@
 package com.taxibookingsystem.service;
 
 import com.taxibookingsystem.model.Booking;
+
 import java.io.*;
 import java.util.*;
 
 public class BookingService {
 
-    // bookings.txt file location
+    // File name — data/bookings.txt
     private static final String FILE_PATH = "data/bookings.txt";
 
-    // CREATE — Write new booking into file
+    // -------- CREATE --------
     public void createBooking(Booking booking) {
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(FILE_PATH, true))) {
-
-            // true = append mode
+        try {
+            File file = new File(FILE_PATH);
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Could not create file: " + e.getMessage());
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
             writer.write(booking.toFileString());
             writer.newLine();
-
         } catch (IOException e) {
             System.out.println("Error saving booking: " + e.getMessage());
         }
     }
 
-    // READ — Get all bookings from file
+    // -------- READ — සියලු bookings --------
     public List<Booking> getAllBookings() {
         List<Booking> bookings = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(
-                new FileReader(FILE_PATH))) {
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     String[] parts = line.split(",");
-                    Booking b = new Booking(
-                            parts[0], parts[1], parts[2], parts[3]);
-                    b.setStatus(parts[4]);
-                    b.setFare(Double.parseDouble(parts[5]));
-                    bookings.add(b);
+                    if (parts.length >= 6) {
+                        Booking b = new Booking(parts[0], parts[1], parts[2], parts[3]);
+                        b.setStatus(parts[4]);
+                        b.setFare(Double.parseDouble(parts[5]));
+                        bookings.add(b);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -47,54 +49,41 @@ public class BookingService {
         return bookings;
     }
 
-    // UPDATE — Update status from booking ID
+    // -------- READ single --------
+    public Booking getBookingById(String bookingId) {
+        return getAllBookings().stream()
+                .filter(b -> b.getBookingId().equals(bookingId))
+                .findFirst().orElse(null);
+    }
+
+    // -------- UPDATE --------
     public void updateBookingStatus(String bookingId, String newStatus) {
         List<Booking> bookings = getAllBookings();
-
         for (Booking b : bookings) {
             if (b.getBookingId().equals(bookingId)) {
                 b.setStatus(newStatus);
                 break;
             }
         }
-
-        // Again save the Updated list to file
         saveAllToFile(bookings);
     }
 
-    // Helper method — Write the list into the file
+    // -------- DELETE --------
+    public void deleteBooking(String bookingId) {
+        List<Booking> bookings = getAllBookings();
+        bookings.removeIf(b -> b.getBookingId().equals(bookingId));
+        saveAllToFile(bookings);
+    }
+
+    // -------- Helper --------
     private void saveAllToFile(List<Booking> bookings) {
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(FILE_PATH, false))) {
-            // false = overwrite mode — Rewrite the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, false))) {
             for (Booking b : bookings) {
                 writer.write(b.toFileString());
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error updating: " + e.getMessage());
+            System.out.println("Error updating file: " + e.getMessage());
         }
     }
-
-    // DELETE — Remove the booking from booking ID
-    public void deleteBooking(String bookingId) {
-        List<Booking> bookings = getAllBookings();
-
-        // Keep the bookings that does notmatch the booking ID
-        bookings.removeIf(b ->
-                b.getBookingId().equals(bookingId));
-
-        // Save the rest booking files
-        saveAllToFile(bookings);
-    }
-
-    // BONUS — Get the single bookings from ID
-    public Booking getBookingById(String bookingId) {
-        return getAllBookings().stream()
-                .filter(b -> b.getBookingId().equals(bookingId))
-                .findFirst()
-                .orElse(null);
-    }
-
 }
-
