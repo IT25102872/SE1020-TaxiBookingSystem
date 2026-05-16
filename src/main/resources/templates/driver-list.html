@@ -1,0 +1,95 @@
+<!-- templates/driver-list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Drivers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #111318 !important; font-family: 'Segoe UI', sans-serif; }
+        nav { background: rgba(10,10,10,0.9); padding: 14px 32px; border-bottom: 1px solid #2A2D35; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .logo { font-size: 18px; font-weight: 800; color: #fff; text-decoration: none; }
+        .logo span { color: #F5C518; }
+        .nav-links { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .nav-links a { color: #7A7D85; text-decoration: none; font-size: 12px; padding: 5px 10px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover { color: #F5C518; background: rgba(245,197,24,0.08); }
+        .user-badge-admin { background: rgba(245,197,24,0.15); color: #F5C518; border: 1px solid rgba(245,197,24,0.3); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .btn-logout { background: rgba(239,68,68,0.1); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; }
+        .btn-logout:hover { background: #EF4444; color: #fff; }
+        h3 { color: #0A0A0A !important; font-weight: 700; font-size: 24px; }
+        .btn-warning { background: #F5C518 !important; border: none !important; color: #0A0A0A !important; font-weight: 700 !important; border-radius: 10px !important; padding: 9px 18px !important; transition: all 0.25s !important; }
+        .btn-warning:hover { background: #D4A800 !important; transform: translateY(-2px) !important; color: #0A0A0A !important; }
+        .card { background: #1A1D24 !important; border: 1px solid #2A2D35 !important; border-radius: 16px !important; box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important; overflow: hidden !important; }
+        .card-body { padding: 0 !important; }
+        .table { margin: 0 !important; color: #F0F0F0 !important; }
+        .table-hover tbody tr:hover { background: rgba(245,197,24,0.04) !important; }
+        .table-dark th { background: #0D0F14 !important; color: #7A7D85 !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: 1px !important; text-transform: uppercase !important; padding: 14px 20px !important; border-color: #2A2D35 !important; }
+        tbody td { padding: 14px 20px !important; border-color: rgba(42,45,53,0.6) !important; vertical-align: middle !important; font-size: 14px !important; }
+        .badge { padding: 5px 12px !important; border-radius: 20px !important; font-size: 11px !important; font-weight: 600 !important; }
+        .badge-available  { background: rgba(34,197,94,0.15)  !important; color: #22C55E !important; border: 1px solid rgba(34,197,94,0.3)  !important; }
+        .badge-busy       { background: rgba(249,115,22,0.15) !important; color: #F97316 !important; border: 1px solid rgba(249,115,22,0.3) !important; }
+        .badge-offline    { background: rgba(239,68,68,0.15)  !important; color: #EF4444 !important; border: 1px solid rgba(239,68,68,0.3)  !important; }
+        .driver-id { font-family: monospace; font-size: 12px; color: #7A7D85; background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; }
+        .btn-primary { background: rgba(245,197,24,0.12) !important; color: #F5C518 !important; border: 1px solid rgba(245,197,24,0.25) !important; border-radius: 8px !important; font-size: 12px !important; font-weight: 600 !important; padding: 5px 12px !important; transition: all 0.2s !important; }
+        .btn-primary:hover { background: #F5C518 !important; color: #0A0A0A !important; }
+        .btn-danger { background: rgba(239,68,68,0.1) !important; color: #EF4444 !important; border: 1px solid rgba(239,68,68,0.2) !important; border-radius: 8px !important; font-size: 12px !important; font-weight: 600 !important; padding: 5px 12px !important; transition: all 0.2s !important; }
+        .btn-danger:hover { background: #EF4444 !important; color: #fff !important; }
+    </style>
+</head>
+<body>
+<nav>
+    <a class="logo" href="/admin/dashboard">Ride<span>Ease</span></a>
+    <div class="nav-links">
+        <a href="/bookings/list">🚕 Bookings</a>
+        <a href="/users/list">👤 Users</a>
+        <a href="/drivers/list">🚗 Drivers</a>
+        <a href="/payments/list">💳 Payments</a>
+        <a href="/vehicles/list">🚙 Vehicles</a>
+        <a href="/reviews/list">⭐ Reviews</a>
+        <span class="user-badge-admin">👑 <span th:text="${user.username}"></span></span>
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+</nav>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>🚗 All Drivers</h3>
+        <a th:href="@{/drivers/new}" class="btn btn-warning">+ Add Driver</a>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th><th>Name</th><th>Phone</th><th>License</th><th>Status</th><th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="d : ${drivers}">
+                    <td><span class="driver-id" th:text="${d.driverId}"></span></td>
+                    <td th:text="${d.name}"></td>
+                    <td th:text="${d.phone}"></td>
+                    <td th:text="${d.licenseNumber}"></td>
+                    <td>
+                        <span th:if="${d.status == 'AVAILABLE'}" class="badge badge-available">AVAILABLE</span>
+                        <span th:if="${d.status == 'BUSY'}"      class="badge badge-busy">BUSY</span>
+                        <span th:if="${d.status == 'OFFLINE'}"   class="badge badge-offline">OFFLINE</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/drivers/edit/{id}(id=${d.driverId})}" class="btn btn-sm btn-primary">Edit</a>
+                        <a th:href="@{/drivers/delete/{id}(id=${d.driverId})}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this driver?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('tbody tr').forEach((row, i) => {
+      row.style.opacity = '0'; row.style.transform = 'translateY(10px)'; row.style.transition = 'all 0.3s ease';
+      setTimeout(() => { row.style.opacity = '1'; row.style.transform = 'translateY(0)'; }, i * 60);
+    });
+</script>
+</body>
+</html>
