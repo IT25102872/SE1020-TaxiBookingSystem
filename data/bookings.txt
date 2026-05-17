@@ -1,0 +1,4 @@
+B1778419859624,Pawara Manaram,Malabe,Kaduwela,CONFIRMED,0.0
+B1778420093202,Pawara manaram,Malabe,Kollupitiya,CANCELLED,0.0
+B1778491421997,Trump,America,Iran,PENDING,0.0
+B1778606711437,Susantha,kollupitiya,Kaduwela,PENDING,0.0
