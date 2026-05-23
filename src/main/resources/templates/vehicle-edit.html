@@ -35,77 +35,77 @@
   </style>
 </head>
 <body>
-<nav>
-  <a class="logo" href="/admin/dashboard">Ride<span>Ease</span></a>
-  <div class="nav-links">
-    <a href="/bookings/list">🚕 Bookings</a>
-    <a href="/users/list">👤 Users</a>
-    <a href="/drivers/list">🚗 Drivers</a>
-    <a href="/payments/list">💳 Payments</a>
-    <a href="/vehicles/list">🚙 Vehicles</a>
-    <a href="/reviews/list">⭐ Reviews</a>
-    <span class="user-badge-admin">👑 <span th:text="${user.username}"></span></span>
-    <a href="/logout" class="btn-logout">Logout</a>
-  </div>
-</nav>
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h4>✏️ Edit Vehicle</h4>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-info">
-            <strong>Vehicle ID:</strong> <span th:text="${vehicle.vehicleId}"></span><br>
-            <strong>Plate:</strong> <span class="plate-display" th:text="${vehicle.plateNumber}"></span><br>
-            <strong>Brand / Model:</strong>
-            <span th:text="${vehicle.brand}"></span> <span th:text="${vehicle.model}"></span>
+  <nav>
+    <a class="logo" href="/admin/dashboard">Ride<span>Ease</span></a>
+    <div class="nav-links">
+      <a href="/bookings/list">🚕 Bookings</a>
+      <a href="/users/list">👤 Users</a>
+      <a href="/drivers/list">🚗 Drivers</a>
+      <a href="/payments/list">💳 Payments</a>
+      <a href="/vehicles/list">🚙 Vehicles</a>
+      <a href="/reviews/list">⭐ Reviews</a>
+      <span class="user-badge-admin">👑 <span th:text="${user.username}"></span></span>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </nav>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h4>✏️ Edit Vehicle</h4>
           </div>
-          <form th:action="@{/vehicles/update}" method="post">
-            <input type="hidden" name="vehicleId" th:value="${vehicle.vehicleId}">
-            <div class="mb-3">
-              <label class="form-label">Type</label>
-              <select name="type" class="form-select">
-                <option value="CAR"         th:selected="${vehicle.type == 'CAR'}">🚗 Car</option>
-                <option value="VAN"         th:selected="${vehicle.type == 'VAN'}">🚐 Van</option>
-                <option value="SUV"         th:selected="${vehicle.type == 'SUV'}">🚙 SUV</option>
-                <option value="BIKE"        th:selected="${vehicle.type == 'BIKE'}">🏍️ Bike</option>
-                <option value="THREE_WHEEL" th:selected="${vehicle.type == 'THREE_WHEEL'}">🛺 Three Wheel</option>
-              </select>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>Vehicle ID:</strong> <span th:text="${vehicle.vehicleId}"></span><br>
+              <strong>Plate:</strong> <span class="plate-display" th:text="${vehicle.plateNumber}"></span><br>
+              <strong>Brand / Model:</strong>
+              <span th:text="${vehicle.brand}"></span> <span th:text="${vehicle.model}"></span>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Status</label>
-              <select name="status" class="form-select" id="statusSelect">
-                <option value="AVAILABLE"   th:selected="${vehicle.status == 'AVAILABLE'}">✅ Available</option>
-                <option value="IN_USE"      th:selected="${vehicle.status == 'IN_USE'}">🔄 In Use</option>
-                <option value="MAINTENANCE" th:selected="${vehicle.status == 'MAINTENANCE'}">🔧 Maintenance</option>
-              </select>
-            </div>
-            <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary w-100">Update</button>
-              <a th:href="@{/vehicles/list}" class="btn btn-secondary w-100">Cancel</a>
-            </div>
-          </form>
+            <form th:action="@{/vehicles/update}" method="post">
+              <input type="hidden" name="vehicleId" th:value="${vehicle.vehicleId}">
+              <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-select">
+                  <option value="CAR"         th:selected="${vehicle.type == 'CAR'}">🚗 Car</option>
+                  <option value="VAN"         th:selected="${vehicle.type == 'VAN'}">🚐 Van</option>
+                  <option value="SUV"         th:selected="${vehicle.type == 'SUV'}">🚙 SUV</option>
+                  <option value="BIKE"        th:selected="${vehicle.type == 'BIKE'}">🏍️ Bike</option>
+                  <option value="THREE_WHEEL" th:selected="${vehicle.type == 'THREE_WHEEL'}">🛺 Three Wheel</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select" id="statusSelect">
+                  <option value="AVAILABLE"   th:selected="${vehicle.status == 'AVAILABLE'}">✅ Available</option>
+                  <option value="IN_USE"      th:selected="${vehicle.status == 'IN_USE'}">🔄 In Use</option>
+                  <option value="MAINTENANCE" th:selected="${vehicle.status == 'MAINTENANCE'}">🔧 Maintenance</option>
+                </select>
+              </div>
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Update</button>
+                <a th:href="@{/vehicles/list}" class="btn btn-secondary w-100">Cancel</a>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<script>
-  const select = document.getElementById('statusSelect');
-  const colors = { 'AVAILABLE':'#22C55E', 'IN_USE':'#F97316', 'MAINTENANCE':'#EF4444' };
-  function updateColor() {
-    const color = colors[select.value];
-    select.style.borderColor = color;
-    select.style.boxShadow = `0 0 0 3px ${color}22`;
-  }
-  select.addEventListener('change', updateColor);
-  updateColor();
-  document.querySelector('form').addEventListener('submit', function() {
-    const btn = this.querySelector('.btn-primary');
-    btn.innerHTML = '⏳ Updating...'; btn.style.opacity = '0.8';
-  });
-</script>
+  <script>
+    const select = document.getElementById('statusSelect');
+    const colors = { 'AVAILABLE':'#22C55E', 'IN_USE':'#F97316', 'MAINTENANCE':'#EF4444' };
+    function updateColor() {
+      const color = colors[select.value];
+      select.style.borderColor = color;
+      select.style.boxShadow = `0 0 0 3px ${color}22`;
+    }
+    select.addEventListener('change', updateColor);
+    updateColor();
+    document.querySelector('form').addEventListener('submit', function() {
+      const btn = this.querySelector('.btn-primary');
+      btn.innerHTML = '⏳ Updating...'; btn.style.opacity = '0.8';
+    });
+  </script>
 </body>
 </html>
