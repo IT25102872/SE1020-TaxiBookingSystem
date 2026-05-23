@@ -1,6 +1,5 @@
 package com.taxibookingsystem.util;
 
-import com.taxibookingsystem.model.User;
 import jakarta.servlet.http.HttpSession;
 
 public class SessionManager {
