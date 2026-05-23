@@ -1,0 +1,70 @@
+<!-- templates/customer-dashboard.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard — RideEase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #111318 !important; font-family: 'Segoe UI', sans-serif; }
+        nav { background: rgba(10,10,10,0.9); padding: 16px 32px; border-bottom: 1px solid #2A2D35; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; }
+        .logo span { color: #F5C518; }
+        .nav-links { display: flex; gap: 8px; align-items: center; }
+        .user-badge { background: rgba(59,130,246,0.15); color: #3B82F6; border: 1px solid rgba(59,130,246,0.3); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .btn-logout { background: rgba(239,68,68,0.1); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-logout:hover { background: #EF4444; color: #fff; }
+        .container { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
+        .welcome { margin-bottom: 32px; }
+        .welcome h2 { color: #F0F0F0; font-size: 28px; font-weight: 700; }
+        .welcome h2 span { color: #F5C518; }
+        .welcome p { color: #7A7D85; font-size: 15px; margin-top: 6px; }
+        .customer-badge { display: inline-block; background: rgba(59,130,246,0.15); color: #3B82F6; border: 1px solid rgba(59,130,246,0.3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 16px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .module-card { background: #1A1D24; border: 1px solid #2A2D35; border-radius: 16px; padding: 28px 24px; text-decoration: none; transition: all 0.25s; display: block; }
+        .module-card:hover { border-color: #F5C518; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+        .module-card.primary { border-color: rgba(245,197,24,0.3); background: rgba(245,197,24,0.05); }
+        .module-icon { font-size: 36px; margin-bottom: 14px; }
+        .module-title { color: #F0F0F0; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .module-desc { color: #7A7D85; font-size: 13px; }
+    </style>
+</head>
+<body>
+<nav>
+    <a class="logo" href="/customer/dashboard">Ride<span>Ease</span></a>
+    <div class="nav-links">
+        <span class="user-badge">👤 <span th:text="${user.username}"></span></span>
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="welcome">
+        <div class="customer-badge">👤 Customer</div>
+        <h2>Hello, <span th:text="${user.username}"></span>! 👋</h2>
+        <p>What would you like to do today?</p>
+    </div>
+    <div class="grid">
+        <a href="/bookings/new" class="module-card primary">
+            <div class="module-icon">🚕</div>
+            <div class="module-title">Book a Ride</div>
+            <div class="module-desc">Book a new taxi ride quickly</div>
+        </a>
+        <a href="/bookings/list" class="module-card">
+            <div class="module-icon">📋</div>
+            <div class="module-title">My Bookings</div>
+            <div class="module-desc">View and manage your bookings</div>
+        </a>
+        <a href="/reviews/new" class="module-card">
+            <div class="module-icon">⭐</div>
+            <div class="module-title">Leave a Review</div>
+            <div class="module-desc">Share your experience</div>
+        </a>
+        <a href="/payments/list" class="module-card">
+            <div class="module-icon">💳</div>
+            <div class="module-title">Payments</div>
+            <div class="module-desc">View payment history</div>
+        </a>
+    </div>
+</div>
+</body>
+</html>

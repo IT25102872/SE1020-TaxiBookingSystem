@@ -1,7 +1,7 @@
 package com.taxibookingsystem.controller;
 
-import com.taxibookingsystem.model.Driver;
-import com.taxibookingsystem.service.DriverService;
+import com.taxibookingsystem.model.Vehicle;
+import com.taxibookingsystem.service.VehicleService;
 import com.taxibookingsystem.util.SessionManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -9,19 +9,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/drivers")
-public class DriverController {
+@RequestMapping("/vehicles")
+public class VehicleController {
 
-    private final DriverService driverService = new DriverService();
+    private final VehicleService vehicleService = new VehicleService();
 
     // READ — Admin only
     @GetMapping("/list")
-    public String listDrivers(HttpSession session, Model model) {
+    public String listVehicles(HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        model.addAttribute("drivers", driverService.getAllDrivers());
+        model.addAttribute("vehicles", vehicleService.getAllVehicles());
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-        return "driver-list";
+        return "vehicle-list";
     }
 
     // CREATE — Admin only
@@ -29,23 +29,22 @@ public class DriverController {
     public String showAddForm(HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-
-        return "driver-add";
+        return "vehicle-add";
     }
 
     @PostMapping("/create")
-    public String createDriver(@RequestParam String name,
-                               @RequestParam String phone,
-                               @RequestParam String licenseNumber,
-                               @RequestParam String status,
-                               HttpSession session) {
+    public String createVehicle(@RequestParam String plateNumber,
+                                @RequestParam String brand,
+                                @RequestParam String model,
+                                @RequestParam String type,
+                                @RequestParam String status,
+                                HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        String id = "D" + System.currentTimeMillis();
-        driverService.createDriver(new Driver(id, name, phone, licenseNumber, status));
-        return "redirect:/drivers/list";
+        String id = "V" + System.currentTimeMillis();
+        vehicleService.createVehicle(new Vehicle(id, plateNumber, brand, model, type, status));
+        return "redirect:/vehicles/list";
     }
 
     // UPDATE — Admin only
@@ -53,28 +52,28 @@ public class DriverController {
     public String showEditForm(@PathVariable String id, HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        model.addAttribute("driver", driverService.getDriverById(id));
+        model.addAttribute("vehicle", vehicleService.getVehicleById(id));
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-        return "driver-edit";
+        return "vehicle-edit";
     }
 
     @PostMapping("/update")
-    public String updateDriver(@RequestParam String driverId,
-                               @RequestParam String phone,
-                               @RequestParam String status,
-                               HttpSession session) {
+    public String updateVehicle(@RequestParam String vehicleId,
+                                @RequestParam String type,
+                                @RequestParam String status,
+                                HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        driverService.updateDriver(driverId, phone, status);
-        return "redirect:/drivers/list";
+        vehicleService.updateVehicle(vehicleId, type, status);
+        return "redirect:/vehicles/list";
     }
 
     // DELETE — Admin only
     @GetMapping("/delete/{id}")
-    public String deleteDriver(@PathVariable String id, HttpSession session) {
+    public String deleteVehicle(@PathVariable String id, HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        driverService.deleteDriver(id);
-        return "redirect:/drivers/list";
+        vehicleService.deleteVehicle(id);
+        return "redirect:/vehicles/list";
     }
 }

@@ -2,6 +2,7 @@ package com.taxibookingsystem.controller;
 
 import com.taxibookingsystem.model.Booking;
 import com.taxibookingsystem.service.BookingService;
+import com.taxibookingsystem.util.SessionManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +26,12 @@ public class BookingController {
 
     // CREATE — Admin + Customer
     @GetMapping("/new")
-    public String showBookingForm(HttpSession session) {
+    public String showBookingForm(HttpSession session, Model model) {
+
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
+
+        model.addAttribute("user", SessionManager.getLoggedInUser(session)); // 🔥 FIX
+
         return "book-ride";
     }
 

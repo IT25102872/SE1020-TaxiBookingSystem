@@ -1,7 +1,7 @@
 package com.taxibookingsystem.controller;
 
-import com.taxibookingsystem.model.Driver;
-import com.taxibookingsystem.service.DriverService;
+import com.taxibookingsystem.model.Review;
+import com.taxibookingsystem.service.ReviewService;
 import com.taxibookingsystem.util.SessionManager;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -9,43 +9,41 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/drivers")
-public class DriverController {
+@RequestMapping("/reviews")
+public class ReviewController {
 
-    private final DriverService driverService = new DriverService();
+    private final ReviewService reviewService = new ReviewService();
 
-    // READ — Admin only
+    // READ — Admin + Customer
     @GetMapping("/list")
-    public String listDrivers(HttpSession session, Model model) {
+    public String listReviews(HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
-        if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        model.addAttribute("drivers", driverService.getAllDrivers());
+        model.addAttribute("reviews", reviewService.getAllReviews());
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-        return "driver-list";
+        model.addAttribute("isAdmin", SessionManager.isAdmin(session));
+        return "review-list";
     }
 
-    // CREATE — Admin only
+    // CREATE — Admin + Customer
     @GetMapping("/new")
     public String showAddForm(HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
-        if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-
-        return "driver-add";
+        return "review-add";
     }
 
     @PostMapping("/create")
-    public String createDriver(@RequestParam String name,
-                               @RequestParam String phone,
-                               @RequestParam String licenseNumber,
-                               @RequestParam String status,
+    public String createReview(@RequestParam String bookingId,
+                               @RequestParam String passengerName,
+                               @RequestParam int rating,
+                               @RequestParam String comment,
                                HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
-        if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        String id = "D" + System.currentTimeMillis();
-        driverService.createDriver(new Driver(id, name, phone, licenseNumber, status));
-        return "redirect:/drivers/list";
+        String id = "R" + System.currentTimeMillis();
+        // Customer ලෙස PENDING — Admin ලෙස APPROVED
+        String status = SessionManager.isAdmin(session) ? "APPROVED" : "PENDING";
+        reviewService.createReview(new Review(id, bookingId, passengerName, rating, comment, status));
+        return "redirect:/reviews/list";
     }
 
     // UPDATE — Admin only
@@ -53,28 +51,28 @@ public class DriverController {
     public String showEditForm(@PathVariable String id, HttpSession session, Model model) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        model.addAttribute("driver", driverService.getDriverById(id));
+        model.addAttribute("review", reviewService.getReviewById(id));
         model.addAttribute("user", SessionManager.getLoggedInUser(session));
-        return "driver-edit";
+        return "review-edit";
     }
 
     @PostMapping("/update")
-    public String updateDriver(@RequestParam String driverId,
-                               @RequestParam String phone,
+    public String updateReview(@RequestParam String reviewId,
+                               @RequestParam String comment,
                                @RequestParam String status,
                                HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        driverService.updateDriver(driverId, phone, status);
-        return "redirect:/drivers/list";
+        reviewService.updateReview(reviewId, comment, status);
+        return "redirect:/reviews/list";
     }
 
     // DELETE — Admin only
     @GetMapping("/delete/{id}")
-    public String deleteDriver(@PathVariable String id, HttpSession session) {
+    public String deleteReview(@PathVariable String id, HttpSession session) {
         if (!SessionManager.isLoggedIn(session)) return "redirect:/login";
         if (!SessionManager.isAdmin(session)) return "redirect:/customer/dashboard";
-        driverService.deleteDriver(id);
-        return "redirect:/drivers/list";
+        reviewService.deleteReview(id);
+        return "redirect:/reviews/list";
     }
 }

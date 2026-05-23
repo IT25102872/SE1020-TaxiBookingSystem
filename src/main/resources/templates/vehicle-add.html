@@ -1,0 +1,110 @@
+<!-- templates/vehicle-add.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Vehicle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #111318 !important; font-family: 'Segoe UI', sans-serif; }
+        nav { background: rgba(10,10,10,0.9); padding: 14px 32px; border-bottom: 1px solid #2A2D35; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .logo { font-size: 18px; font-weight: 800; color: #fff; text-decoration: none; }
+        .logo span { color: #F5C518; }
+        .nav-links { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .nav-links a { color: #7A7D85; text-decoration: none; font-size: 12px; padding: 5px 10px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover { color: #F5C518; background: rgba(245,197,24,0.08); }
+        .user-badge-admin { background: rgba(245,197,24,0.15); color: #F5C518; border: 1px solid rgba(245,197,24,0.3); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .btn-logout { background: rgba(239,68,68,0.1); color: #EF4444; border: 1px solid rgba(239,68,68,0.2); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; }
+        .btn-logout:hover { background: #EF4444; color: #fff; }
+        .card { background: #1A1D24 !important; border: 1px solid #2A2D35 !important; border-radius: 16px !important; box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important; }
+        .card-header { background: #F5C518 !important; border-radius: 16px 16px 0 0 !important; padding: 18px 24px !important; border-bottom: none !important; }
+        .card-header h4 { color: #0A0A0A !important; font-weight: 700; margin: 0; font-size: 20px; }
+        .card-body { padding: 28px 24px !important; }
+        .form-label { color: #9A9DA5 !important; font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.8px !important; text-transform: uppercase !important; margin-bottom: 8px !important; transition: color 0.2s; }
+        .form-control, .form-select { background: rgba(255,255,255,0.05) !important; border: 1px solid #2A2D35 !important; border-radius: 10px !important; color: #F0F0F0 !important; padding: 12px 16px !important; font-size: 15px !important; transition: all 0.25s !important; }
+        .form-control::placeholder { color: #555860 !important; }
+        .form-control:focus, .form-select:focus { background: rgba(245,197,24,0.06) !important; border-color: #F5C518 !important; box-shadow: 0 0 0 3px rgba(245,197,24,0.12) !important; color: #F0F0F0 !important; }
+        .form-select option { background: #1A1D24 !important; color: #F0F0F0 !important; }
+        .btn-warning { background: #F5C518 !important; border: none !important; color: #0A0A0A !important; font-weight: 700 !important; font-size: 15px !important; padding: 13px !important; border-radius: 10px !important; transition: all 0.25s !important; }
+        .btn-warning:hover { background: #D4A800 !important; transform: translateY(-2px) !important; color: #0A0A0A !important; }
+        .card-footer { background: #161820 !important; border-top: 1px solid #2A2D35 !important; border-radius: 0 0 16px 16px !important; padding: 14px 24px !important; }
+        .btn-outline-secondary { color: #7A7D85 !important; border-color: #2A2D35 !important; border-radius: 8px !important; font-size: 13px !important; }
+        .btn-outline-secondary:hover { background: #2A2D35 !important; color: #F0F0F0 !important; }
+        .mb-3 { margin-bottom: 18px !important; }
+    </style>
+</head>
+<body>
+<nav>
+    <a class="logo" href="/admin/dashboard">Ride<span>Ease</span></a>
+    <div class="nav-links">
+        <a href="/bookings/list">🚕 Bookings</a>
+        <a href="/users/list">👤 Users</a>
+        <a href="/drivers/list">🚗 Drivers</a>
+        <a href="/payments/list">💳 Payments</a>
+        <a href="/vehicles/list">🚙 Vehicles</a>
+        <a href="/reviews/list">⭐ Reviews</a>
+        <span class="user-badge-admin">👑 <span th:text="${user.username}"></span></span>
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>🚙 Add Vehicle</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/vehicles/create}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Plate Number</label>
+                            <input type="text" name="plateNumber" class="form-control" placeholder="e.g. CAB-1234" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Brand</label>
+                            <input type="text" name="brand" class="form-control" placeholder="e.g. Toyota" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Model</label>
+                            <input type="text" name="model" class="form-control" placeholder="e.g. Corolla" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select name="type" class="form-select">
+                                <option value="CAR">🚗 Car</option>
+                                <option value="VAN">🚐 Van</option>
+                                <option value="SUV">🚙 SUV</option>
+                                <option value="BIKE">🏍️ Bike</option>
+                                <option value="THREE_WHEEL">🛺 Three Wheel</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="AVAILABLE">✅ Available</option>
+                                <option value="IN_USE">🔄 In Use</option>
+                                <option value="MAINTENANCE">🔧 Maintenance</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">🚙 Add Vehicle</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{/vehicles/list}" class="btn btn-outline-secondary btn-sm">View All Vehicles →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.form-control').forEach(input => {
+      input.addEventListener('focus', function() { this.closest('.mb-3').querySelector('.form-label').style.color = '#F5C518'; });
+      input.addEventListener('blur', function() { this.closest('.mb-3').querySelector('.form-label').style.color = '#9A9DA5'; });
+    });
+    document.querySelector('form').addEventListener('submit', function() {
+      const btn = this.querySelector('.btn-warning');
+      btn.innerHTML = '⏳ Adding...'; btn.style.opacity = '0.8';
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+U001,admin,admin@taxi.com,admin123,ADMIN
+U002,customer,customer@taxi.com,customer123,USER
