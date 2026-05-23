@@ -1,9 +1,9 @@
-<!-- templates/driver-list.html -->
+<!-- templates/vehicle-list.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>All Drivers</title>
+    <title>All Vehicles</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #111318 !important; font-family: 'Segoe UI', sans-serif; }
@@ -26,10 +26,16 @@
         .table-dark th { background: #0D0F14 !important; color: #7A7D85 !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: 1px !important; text-transform: uppercase !important; padding: 14px 20px !important; border-color: #2A2D35 !important; }
         tbody td { padding: 14px 20px !important; border-color: rgba(42,45,53,0.6) !important; vertical-align: middle !important; font-size: 14px !important; }
         .badge { padding: 5px 12px !important; border-radius: 20px !important; font-size: 11px !important; font-weight: 600 !important; }
-        .badge-available  { background: rgba(34,197,94,0.15)  !important; color: #22C55E !important; border: 1px solid rgba(34,197,94,0.3)  !important; }
-        .badge-busy       { background: rgba(249,115,22,0.15) !important; color: #F97316 !important; border: 1px solid rgba(249,115,22,0.3) !important; }
-        .badge-offline    { background: rgba(239,68,68,0.15)  !important; color: #EF4444 !important; border: 1px solid rgba(239,68,68,0.3)  !important; }
-        .driver-id { font-family: monospace; font-size: 12px; color: #7A7D85; background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; }
+        .badge-available   { background: rgba(34,197,94,0.15)  !important; color: #22C55E !important; border: 1px solid rgba(34,197,94,0.3)  !important; }
+        .badge-in_use      { background: rgba(249,115,22,0.15) !important; color: #F97316 !important; border: 1px solid rgba(249,115,22,0.3) !important; }
+        .badge-maintenance { background: rgba(239,68,68,0.15)  !important; color: #EF4444 !important; border: 1px solid rgba(239,68,68,0.3)  !important; }
+        .badge-car         { background: rgba(59,130,246,0.15)  !important; color: #3B82F6 !important; border: 1px solid rgba(59,130,246,0.3)  !important; }
+        .badge-van         { background: rgba(168,85,247,0.15)  !important; color: #A855F7 !important; border: 1px solid rgba(168,85,247,0.3)  !important; }
+        .badge-suv         { background: rgba(245,197,24,0.15)  !important; color: #F5C518 !important; border: 1px solid rgba(245,197,24,0.3)  !important; }
+        .badge-bike        { background: rgba(236,72,153,0.15)  !important; color: #EC4899 !important; border: 1px solid rgba(236,72,153,0.3)  !important; }
+        .badge-three_wheel { background: rgba(20,184,166,0.15)  !important; color: #14B8A6 !important; border: 1px solid rgba(20,184,166,0.3)  !important; }
+        .vehicle-id { font-family: monospace; font-size: 12px; color: #7A7D85; background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; }
+        .plate { font-family: monospace; font-weight: 700; color: #F5C518; font-size: 14px; }
         .btn-primary { background: rgba(245,197,24,0.12) !important; color: #F5C518 !important; border: 1px solid rgba(245,197,24,0.25) !important; border-radius: 8px !important; font-size: 12px !important; font-weight: 600 !important; padding: 5px 12px !important; transition: all 0.2s !important; }
         .btn-primary:hover { background: #F5C518 !important; color: #0A0A0A !important; }
         .btn-danger { background: rgba(239,68,68,0.1) !important; color: #EF4444 !important; border: 1px solid rgba(239,68,68,0.2) !important; border-radius: 8px !important; font-size: 12px !important; font-weight: 600 !important; padding: 5px 12px !important; transition: all 0.2s !important; }
@@ -52,32 +58,39 @@
 </nav>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>🚗 All Drivers</h3>
-        <a th:href="@{/drivers/new}" class="btn btn-warning">+ Add Driver</a>
+        <h3>🚙 All Vehicles</h3>
+        <a th:href="@{/vehicles/new}" class="btn btn-warning">+ Add Vehicle</a>
     </div>
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-hover">
                 <thead class="table-dark">
                 <tr>
-                    <th>ID</th><th>Name</th><th>Phone</th><th>License</th><th>Status</th><th>Actions</th>
+                    <th>ID</th><th>Plate</th><th>Brand</th><th>Model</th><th>Type</th><th>Status</th><th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="d : ${drivers}">
-                    <td><span class="driver-id" th:text="${d.driverId}"></span></td>
-                    <td th:text="${d.name}"></td>
-                    <td th:text="${d.phone}"></td>
-                    <td th:text="${d.licenseNumber}"></td>
+                <tr th:each="v : ${vehicles}">
+                    <td><span class="vehicle-id" th:text="${v.vehicleId}"></span></td>
+                    <td><span class="plate" th:text="${v.plateNumber}"></span></td>
+                    <td th:text="${v.brand}"></td>
+                    <td th:text="${v.model}"></td>
                     <td>
-                        <span th:if="${d.status == 'AVAILABLE'}" class="badge badge-available">AVAILABLE</span>
-                        <span th:if="${d.status == 'BUSY'}"      class="badge badge-busy">BUSY</span>
-                        <span th:if="${d.status == 'OFFLINE'}"   class="badge badge-offline">OFFLINE</span>
+                        <span th:if="${v.type == 'CAR'}"         class="badge badge-car">🚗 CAR</span>
+                        <span th:if="${v.type == 'VAN'}"         class="badge badge-van">🚐 VAN</span>
+                        <span th:if="${v.type == 'SUV'}"         class="badge badge-suv">🚙 SUV</span>
+                        <span th:if="${v.type == 'BIKE'}"        class="badge badge-bike">🏍️ BIKE</span>
+                        <span th:if="${v.type == 'THREE_WHEEL'}" class="badge badge-three_wheel">🛺 THREE WHEEL</span>
                     </td>
                     <td>
-                        <a th:href="@{/drivers/edit/{id}(id=${d.driverId})}" class="btn btn-sm btn-primary">Edit</a>
-                        <a th:href="@{/drivers/delete/{id}(id=${d.driverId})}" class="btn btn-sm btn-danger"
-                           onclick="return confirm('Delete this driver?')">Delete</a>
+                        <span th:if="${v.status == 'AVAILABLE'}"   class="badge badge-available">AVAILABLE</span>
+                        <span th:if="${v.status == 'IN_USE'}"      class="badge badge-in_use">IN USE</span>
+                        <span th:if="${v.status == 'MAINTENANCE'}" class="badge badge-maintenance">MAINTENANCE</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/vehicles/edit/{id}(id=${v.vehicleId})}" class="btn btn-sm btn-primary">Edit</a>
+                        <a th:href="@{/vehicles/delete/{id}(id=${v.vehicleId})}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Delete this vehicle?')">Delete</a>
                     </td>
                 </tr>
                 </tbody>
